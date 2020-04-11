@@ -1,27 +1,39 @@
 import logging
 import os
 
+import pyowm
 from telegram.ext import Filters, MessageHandler
 from telegram.ext import Updater
 
+import weather
+
 logging.basicConfig(filename='events.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
-TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN_WEATHER_FORECAST_BOT')
 WEATHER_API_KEY = os.environ.get('WEATHER_API_KEY')
-PROXY_URL = os.environ.get('PROXY_URL')
+owm = pyowm.OWM(WEATHER_API_KEY)
+owm.set_language("ru")
 
+PROXY_URL = os.environ.get('PROXY_URL')
 REQUEST_KWARGS = {}
 if PROXY_URL is not None:
     REQUEST_KWARGS['proxy_url'] = PROXY_URL
 
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN_WEATHER_FORECAST_BOT')
 updater = Updater(TELEGRAM_TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
 dispatcher = updater.dispatcher
 
 
+def on_city_name_received(city_name):
+    observation = owm.weather_at_place(city_name)
+    forecast_message = weather.create_forecast_message(observation)
+    return forecast_message
+
+
 def on_message_received(update, context):
     chat_id = update.message.chat_id
-    message_text = update.message.text
-    updater.bot.send_message(chat_id=chat_id, text=message_text)
+    city_name = update.message.text
+    forecast_message = on_city_name_received(city_name)
+    updater.bot.send_message(chat_id=chat_id, text=forecast_message)
 
 
 dispatcher.add_handler(MessageHandler(Filters.text, on_message_received))

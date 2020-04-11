@@ -2,7 +2,7 @@ import logging
 import os
 
 import pyowm
-from telegram.ext import Filters, MessageHandler
+from telegram.ext import Filters, MessageHandler, CommandHandler
 from telegram.ext import Updater
 
 import weather
@@ -11,7 +11,7 @@ logging.basicConfig(filename='events.log', level=logging.INFO, format='%(asctime
 
 WEATHER_API_KEY = os.environ.get('WEATHER_API_KEY')
 owm = pyowm.OWM(WEATHER_API_KEY)
-owm.set_language("ru")
+owm.set_language('ru')
 
 PROXY_URL = os.environ.get('PROXY_URL')
 REQUEST_KWARGS = {}
@@ -21,6 +21,16 @@ if PROXY_URL is not None:
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN_WEATHER_FORECAST_BOT')
 updater = Updater(TELEGRAM_TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
 dispatcher = updater.dispatcher
+
+
+def start(update, context):
+    chat_id = update.message.chat_id
+    greeting_text = 'Привет! Я подскажу тебе прогноз погоды и помогу выбрать, что надеть!\n\
+🌇 Введи название города или отправь геолокацию.\n\n\
+Иногда названия городов совпадают, поэтому я рекомендую использовать геолокацию.\
+Если нет возможности отправить геолокацию, можно сделать поиск по названию точнее. \
+Для этого после названия города через запятую укажи страну, например: Москва, RU'
+    updater.bot.send_message(chat_id=chat_id, text=greeting_text)
 
 
 def on_message_received(update, context):
@@ -49,6 +59,9 @@ def on_city_location_received(location):
     return forecast_message
 
 
+start_handler = CommandHandler('start', start)
+
+dispatcher.add_handler(start_handler)
 dispatcher.add_handler(MessageHandler(Filters.text, on_message_received))
 dispatcher.add_handler(MessageHandler(Filters.location, on_location_received))
 

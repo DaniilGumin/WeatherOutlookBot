@@ -2,6 +2,7 @@ import logging
 import os
 
 import pyowm
+from pyowm.exceptions.api_response_error import NotFoundError
 from telegram.ext import Filters, MessageHandler, CommandHandler
 from telegram.ext import Updater
 
@@ -41,9 +42,12 @@ def on_message_received(update, context):
 
 
 def on_city_name_received(city_name):
-    observation = owm.weather_at_place(city_name)
-    forecast_message = weather.create_forecast_message(observation)
-    return forecast_message
+    try:
+        observation = owm.weather_at_place(city_name)
+        forecast_message = weather.create_forecast_message(observation)
+        return forecast_message
+    except NotFoundError:
+        return 'Город не найден 👀 \nПопробуй поискать по геолокации'
 
 
 def on_location_received(update, context):

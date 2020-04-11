@@ -1,1 +1,3 @@
-python_telegram_bot == 12.5.1
+# Using specific commit from dev because version with feels_like field was not released yet
+git+https://github.com/csparpa/pyowm.git@dc6e06cb54f6394952fe94abcdd27ff6e8325039
+python_telegram_bot== 12.5.1

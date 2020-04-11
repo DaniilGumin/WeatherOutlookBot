@@ -23,12 +23,6 @@ updater = Updater(TELEGRAM_TOKEN, use_context=True, request_kwargs=REQUEST_KWARG
 dispatcher = updater.dispatcher
 
 
-def on_city_name_received(city_name):
-    observation = owm.weather_at_place(city_name)
-    forecast_message = weather.create_forecast_message(observation)
-    return forecast_message
-
-
 def on_message_received(update, context):
     chat_id = update.message.chat_id
     city_name = update.message.text
@@ -36,6 +30,27 @@ def on_message_received(update, context):
     updater.bot.send_message(chat_id=chat_id, text=forecast_message)
 
 
+def on_city_name_received(city_name):
+    observation = owm.weather_at_place(city_name)
+    forecast_message = weather.create_forecast_message(observation)
+    return forecast_message
+
+
+def on_location_received(update, context):
+    chat_id = update.message.chat_id
+    location = update.message.location
+    forecast_message = on_city_location_received(location)
+    updater.bot.send_message(chat_id=chat_id, text=forecast_message)
+
+
+def on_city_location_received(location):
+    observation = owm.weather_at_coords(location.latitude, location.longitude)
+    forecast_message = weather.create_forecast_message(observation)
+    return forecast_message
+
+
 dispatcher.add_handler(MessageHandler(Filters.text, on_message_received))
+dispatcher.add_handler(MessageHandler(Filters.location, on_location_received))
+
 updater.start_polling()
 logging.info('Bot started')

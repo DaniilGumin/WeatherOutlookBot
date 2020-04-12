@@ -1,7 +1,9 @@
 # Умный сервис прогноза погоды для Школы CTO Яндекс.Облака
-_Сложность - задача со звездочкой_
-
+_Сложность - задача со звездочкой_\
+![alt text](https://i.imgur.com/xTjazn4.png)
 ## [Видео с примером работы](https://drive.google.com/file/d/1TCbTQuB8iGzzN7oitKZKSGAkZcbO7dN2/view?usp=sharing)
+Бот задеплоен на [Heroku](heroku.com) и доступен в Telegram [@weather_outlook_bot](t.me/weather_outlook_bot)
+
 
 ## Запуск
 1. Если вы живете в России, скорее всего, вам понадобится Tor, чтобы обойти блокировку Telegram. Загрузите его с [официального сайта TorProject](https://www.torproject.org/ru/download/tor/) и запустите в режиме sosks-proxy. Например, на Windows для этого достаточно запустить `tor.exe` в консоли. Установите адрес sosks-proxy в переменную окружения PROXY_URL. По умолчанию это socks5h://127.0.0.1:9050

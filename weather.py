@@ -15,7 +15,7 @@ def create_forecast_message(observation) -> str:
     is_sunny = icon_name == '01d' or icon_name.startswith('02')
     clothes = what_to_wear(feels_like, is_raining, is_sunny)
     forecast_message = '{0}, {1}\
-                        \n🌡 {2}°С, по ощущениям {3}°С \
+                        \n🌡 {2}°С, по ощущениям {3}°С\
                         \n{4} {5}\
                         \nВетер {6}м/c\
                         \nОблака: {7} %\

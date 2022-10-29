@@ -7,8 +7,6 @@ from telegram.ext import Filters, MessageHandler, CommandHandler, CallbackQueryH
 from telegram.ext import Updater
 
 from Services import weather, keyboard
-from Database.IDatabase import IDatabase
-from Database.SqliteDatabase import SqliteDatabase
 
 logging.basicConfig(filename='events.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -23,7 +21,6 @@ if PROXY_URL is not None:
 
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN_WEATHER_FORECAST_BOT')
 updater = Updater(TELEGRAM_TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
-DATABASE: IDatabase = SqliteDatabase()
 dispatcher = updater.dispatcher
 
 
@@ -42,7 +39,6 @@ def on_message_received(update, context):
     city_name = update.message.text
     try:
         forecast_message = on_city_name_received(city_name)
-        DATABASE.save_last_city_for_user(chat_id, city_name)
         markup = keyboard.create_markup(city_name)
     except NotFoundError:
         forecast_message = 'Город не найден 👀 \nПопробуй поискать по геолокации'
@@ -61,7 +57,6 @@ def on_location_received(update, context):
     location = update.message.location
     forecast_message = on_city_location_received(location)
     city_name = owm.weather_at_coords(location.latitude, location.longitude).get_location().get_name()
-    DATABASE.save_last_city_for_user(chat_id, city_name)
     markup = keyboard.create_markup(city_name)
     updater.bot.send_message(chat_id=chat_id, text=forecast_message, reply_markup=markup)
 

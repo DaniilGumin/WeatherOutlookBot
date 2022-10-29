@@ -7,6 +7,8 @@ from telegram.ext import Filters, MessageHandler, CommandHandler
 from telegram.ext import Updater
 
 import weather
+from Database.IDatabase import IDatabase
+from Database.SqliteDatabase import SqliteDatabase
 
 logging.basicConfig(filename='events.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -21,6 +23,7 @@ if PROXY_URL is not None:
 
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN_WEATHER_FORECAST_BOT')
 updater = Updater(TELEGRAM_TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
+DATABASE: IDatabase = SqliteDatabase()
 dispatcher = updater.dispatcher
 
 
@@ -37,23 +40,26 @@ def start(update, context):
 def on_message_received(update, context):
     chat_id = update.message.chat_id
     city_name = update.message.text
-    forecast_message = on_city_name_received(city_name)
+    try:
+        forecast_message = on_city_name_received(city_name)
+        DATABASE.save_last_city_for_user(chat_id, city_name)
+    except NotFoundError:
+        forecast_message = 'Город не найден 👀 \nПопробуй поискать по геолокации'
     updater.bot.send_message(chat_id=chat_id, text=forecast_message)
 
 
-def on_city_name_received(city_name):
-    try:
-        observation = owm.weather_at_place(city_name)
-        forecast_message = weather.create_forecast_message(observation)
-        return forecast_message
-    except NotFoundError:
-        return 'Город не найден 👀 \nПопробуй поискать по геолокации'
+def on_city_name_received(city_name: str) -> str:
+    observation = owm.weather_at_place(city_name)
+    forecast_message = weather.create_forecast_message(observation)
+    return forecast_message
 
 
 def on_location_received(update, context):
     chat_id = update.message.chat_id
     location = update.message.location
     forecast_message = on_city_location_received(location)
+    DATABASE.save_last_city_for_user(chat_id,
+                                     owm.weather_at_coords(location.latitude, location.longitude).location.get_name())
     updater.bot.send_message(chat_id=chat_id, text=forecast_message)
 
 

@@ -32,7 +32,7 @@ def create_forecast_message(observation) -> str:
     return forecast_message
 
 
-def get_emoji_by_icon_name(icon_name):
+def get_emoji_by_icon_name(icon_name: str) -> str:
     emoji = ''
     if icon_name == '01d':
         emoji = '☀️'
@@ -57,7 +57,7 @@ def get_emoji_by_icon_name(icon_name):
     return emoji
 
 
-def what_to_wear(feels_like: float, is_raining: bool, is_sunny: bool):
+def what_to_wear(feels_like: float, is_raining: bool, is_sunny: bool) -> str:
     text = 'Что надеть? '
     if feels_like < -25:
         text += 'Надевай всё, что есть!'

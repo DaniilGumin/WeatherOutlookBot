@@ -15,7 +15,7 @@ class SqliteDatabase(IDatabase):
     def database_config(self):
         self.cur.execute("""CREATE TABLE IF NOT EXISTS city(
                 user_id INT PRIMARY KEY,
-                city TEXT)
+                city VARCHAR(50))
                 """)
         self.conn.commit()
 

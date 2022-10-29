@@ -3,10 +3,10 @@ import os
 
 import pyowm
 from pyowm.exceptions.api_response_error import NotFoundError
-from telegram.ext import Filters, MessageHandler, CommandHandler
+from telegram.ext import Filters, MessageHandler, CommandHandler, CallbackQueryHandler
 from telegram.ext import Updater
 
-import weather
+from Services import weather, keyboard
 
 logging.basicConfig(filename='events.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -37,24 +37,28 @@ def start(update, context):
 def on_message_received(update, context):
     chat_id = update.message.chat_id
     city_name = update.message.text
-    forecast_message = on_city_name_received(city_name)
-    updater.bot.send_message(chat_id=chat_id, text=forecast_message)
-
-
-def on_city_name_received(city_name):
     try:
-        observation = owm.weather_at_place(city_name)
-        forecast_message = weather.create_forecast_message(observation)
-        return forecast_message
+        forecast_message = on_city_name_received(city_name)
+        markup = keyboard.create_markup(city_name)
     except NotFoundError:
-        return 'Город не найден 👀 \nПопробуй поискать по геолокации'
+        forecast_message = 'Город не найден 👀 \nПопробуй поискать по геолокации'
+        markup = None
+    updater.bot.send_message(chat_id=chat_id, text=forecast_message, reply_markup=markup)
+
+
+def on_city_name_received(city_name: str) -> str:
+    observation = owm.weather_at_place(city_name)
+    forecast_message = weather.create_forecast_message(observation)
+    return forecast_message
 
 
 def on_location_received(update, context):
     chat_id = update.message.chat_id
     location = update.message.location
     forecast_message = on_city_location_received(location)
-    updater.bot.send_message(chat_id=chat_id, text=forecast_message)
+    city_name = owm.weather_at_coords(location.latitude, location.longitude).get_location().get_name()
+    markup = keyboard.create_markup(city_name)
+    updater.bot.send_message(chat_id=chat_id, text=forecast_message, reply_markup=markup)
 
 
 def on_city_location_received(location):

@@ -14,36 +14,27 @@ def create_forecast_message(observation) -> str:
     is_raining = icon_name.startswith('09') or icon_name.startswith('10')
     is_sunny = icon_name == '01d' or icon_name.startswith('02')
     clothes = what_to_wear(feels_like, is_raining, is_sunny)
-    forecast_message = '{0}, {1}\
-                        \n🌡 {2}°С, по ощущениям {3}°С\
-                        \n{4} {5}\
-                        \nВетер {6}м/c\
-                        \nОблака: {7} %\
-                        \n{8}' \
-        .format(city,
-                country,
-                temperature,
-                feels_like,
-                emoji,
-                weather_description,
-                speed_of_wind,
-                clouds_percent,
-                clothes)
+    forecast_message = f'{city}, {country}\
+                        \n🌡 {temperature}°С, по ощущениям {feels_like}°С\
+                        \n{emoji} {weather_description}\
+                        \nВетер {speed_of_wind}м/c\
+                        \nОблака: {clouds_percent} %\
+                        \n{clothes}'
     return forecast_message
 
 
 def get_emoji_by_icon_name(icon_name: str) -> str:
     emoji = ''
     if icon_name == '01d':
-        emoji = '☀️'
+        emoji = '☀'
     elif icon_name == '01n':
         emoji = '🌑'
     elif icon_name.startswith('02'):
         emoji = '🌤'
     elif icon_name.startswith('03'):
-        emoji = '☁️'
+        emoji = '☁'
     elif icon_name.startswith('04'):
-        emoji = '☁️☁️'
+        emoji = '☁️☁'
     elif icon_name.startswith('09'):
         emoji = '🌧'
     elif icon_name.startswith('10'):
@@ -51,7 +42,7 @@ def get_emoji_by_icon_name(icon_name: str) -> str:
     elif icon_name.startswith('11'):
         emoji = '🌩'
     elif icon_name.startswith('13'):
-        emoji = '❄️'
+        emoji = '❄'
     elif icon_name.startswith('50'):
         emoji = '🌫'
     return emoji
@@ -76,11 +67,11 @@ def what_to_wear(feels_like: float, is_raining: bool, is_sunny: bool) -> str:
     elif feels_like < 25:
         text += 'Футболка или рубашка с коротким рукавом, шорты, кеды или кроссовки'
     elif feels_like < 35:
-        text += 'Шорты, майка, сланцы'
+        text += 'Шорты, майка, сланцы🩴'
     else:
         text = 'Берегись солнечного удара 👊🌝👊'
     if is_sunny and 20 < feels_like < 35:
         text += ', кепка или панамка'
     elif is_raining:
-        text += ', зонтик'
+        text += ', зонтик☂'
     return text

@@ -3,7 +3,7 @@ import os
 
 import pyowm
 from pyowm.exceptions.api_response_error import NotFoundError
-from telegram.ext import Filters, MessageHandler, CommandHandler, CallbackQueryHandler
+from telegram.ext import Filters, MessageHandler, CommandHandler
 from telegram.ext import Updater
 
 from Services import weather, keyboard

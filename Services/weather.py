@@ -1,4 +1,9 @@
 def create_forecast_message(observation) -> str:
+    """"
+    Собирает всю необходимую информацию о погоде и возвращает её в виде строки, которая
+    содержит 'город', 'страну', 'температуру', 'температуру по ощущениям', 'эмодзи с погодой', 'скорость ветра'
+    'процент облаков', 'одежду, которую стоит одеть'
+    """
     location = observation.get_location()
     city = location.get_name()
     country = location.get_country()
@@ -24,6 +29,9 @@ def create_forecast_message(observation) -> str:
 
 
 def get_emoji_by_icon_name(icon_name: str) -> str:
+    """"
+    Возвращает строковое представление эмодзи на основе полученного параметра icon_name
+    """
     emoji = ''
     if icon_name == '01d':
         emoji = '☀'
@@ -49,6 +57,9 @@ def get_emoji_by_icon_name(icon_name: str) -> str:
 
 
 def what_to_wear(feels_like: float, is_raining: bool, is_sunny: bool) -> str:
+    """"
+    Возвращает строку, которая содержит список вещей, которые стоит надеть, на основе полученных данных о погоде
+    """
     text = 'Что надеть? '
     if feels_like < -25:
         text += 'Надевай всё, что есть!'

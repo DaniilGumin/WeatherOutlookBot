@@ -5,16 +5,16 @@ _Сложность - задача со звездочкой_\
 
 ## Оглавление
 
-1. [Запуск](#start)
-2. [Интерфейс](#interface)
-3. [Технологии](#techs)
-4. [Алгоритм работы](#algo)
+1. [Запуск](#zapusk)
+2. [Интерфейс](#interfeis)
+3. [Технологии](#tekhnologii)
+4. [Алгоритм работы](#algoritm-raboty)
 
 ## [Видео с примером работы](https://drive.google.com/file/d/1TCbTQuB8iGzzN7oitKZKSGAkZcbO7dN2/view?usp=sharing)
 
 Бот задеплоен на [Heroku](heroku.com) и доступен в Telegram [@weather_outlook_bot](t.me/weather_outlook_bot)
 
-<a name="start"></a>
+<a name="zapusk"></a>
 
 ## Запуск
 
@@ -36,7 +36,7 @@ _Сложность - задача со звездочкой_\
 5. Запустите\
    `python3 main.py`
 
-<a name="interface"></a>
+<a name="tekhnologii"></a>
 
 ## Интерфейс
 
@@ -57,7 +57,7 @@ _Сложность - задача со звездочкой_\
 Применялись библиотеки [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
 и [pyowm](https://github.com/csparpa/pyowm) (обертка над OpenWeatherMapAPI).
 
-<a name="algo"></a>
+<a name="algoritm-raboty"></a>
 
 ## Алгоритм работы
 

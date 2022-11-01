@@ -4,8 +4,8 @@
 ### Team Members:
 
 - **Daniil Gumin**
-- **Ivan Hryakow**
 - **Andrew Zmushko**
+- **Ivan Hryakow**
 
 ***
 
